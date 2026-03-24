@@ -52,7 +52,7 @@ const store = {
     const index = data.tasks.findIndex((t) => t.id === id);
     if (index === -1) return false;
 
-    data.tasks.splice(index);
+    data.tasks.splice(index, 1);
     return true;
   },
 
