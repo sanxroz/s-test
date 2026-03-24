@@ -1,22 +1,22 @@
-const express = require("express");
-const taskRoutes = require("./routes/tasks");
-const userRoutes = require("./routes/users");
+const express = require('express');
+const taskRoutes = require('./routes/tasks');
+const authMiddleware = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(authMiddleware);
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok", uptime: process.uptime() });
+app.use('/api/tasks', taskRoutes);
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.use("/api/tasks", taskRoutes);
-app.use("/api/users", userRoutes);
-
-app.use((err, _req, res, _next) => {
+app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Internal server error" });
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(PORT, () => {

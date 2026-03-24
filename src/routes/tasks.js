@@ -1,141 +1,91 @@
-const express = require("express");
-const store = require("../models/store");
-const { authenticate, requireAdmin } = require("../middleware/auth");
-const { validateTask, validateTaskUpdate, checkTitleUniqueness } = require("../utils/validators");
-const { paginate, formatTaskSummary, groupByStatus, isOverdue } = require("../utils/helpers");
-
+const express = require('express');
 const router = express.Router();
+const store = require('../store');
+const { validateTask, filterTasks, sortTasks, paginate } = require('../utils/helpers');
 
-router.get("/", authenticate, (req, res) => {
-  const { page = 1, perPage = 10, status, search, priority } = req.query;
-
+router.get('/', (req, res) => {
   let tasks = store.getAllTasks();
 
-  if (status) {
-    tasks = tasks.filter((t) => t.status === status);
-  }
+  tasks = filterTasks(tasks, req.query);
+  tasks = sortTasks(tasks, req.query.sortBy, req.query.order);
 
-  if (priority) {
-    tasks = tasks.filter((t) => t.priority === priority);
-  }
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
 
-  if (search) {
-    tasks = tasks.filter(
-      (t) => t.title.includes(search) || t.description.includes(search)
-    );
-  }
-
-  const result = paginate(tasks, parseInt(page), parseInt(perPage));
+  const result = paginate(tasks, page, limit);
   res.json(result);
 });
 
-router.get("/summary", authenticate, (_req, res) => {
-  const tasks = store.getAllTasks();
-  const grouped = groupByStatus(tasks);
-
-  const summary = {};
-  for (const [status, items] of Object.entries(grouped)) {
-    summary[status] = {
-      count: items.length,
-      tasks: items.map(formatTaskSummary),
-    };
-  }
-
-  res.json({ summary });
-});
-
-router.get("/overdue", authenticate, (_req, res) => {
-  const tasks = store.getAllTasks();
-  const overdue = tasks.filter((t) => t.dueDate && isOverdue(t.dueDate));
-  res.json({ overdue });
-});
-
-router.get("/:id", authenticate, (req, res) => {
+router.get('/:id', (req, res) => {
   const task = store.getTaskById(req.params.id);
+
   if (!task) {
-    return res.status(404).json({ error: "Task not found" });
+    return res.status(404).json({ error: 'Task not found' });
   }
-  res.json({ task });
+
+  res.json(task);
 });
 
-router.post("/", authenticate, async (req, res) => {
-  const validation = validateTask(req.body);
-  if (!validation.valid) {
-    return res.status(400).json({ errors: validation.errors });
-  }
+router.post('/', (req, res) => {
+  const errors = validateTask(req.body);
 
-  const isUnique = checkTitleUniqueness(req.body.title, store);
-  if (!isUnique) {
-    return res.status(409).json({ error: "A task with this title already exists" });
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
   }
 
   const task = store.createTask(req.body);
-  res.status(201).json({ task });
+  res.status(200).json(task);
 });
 
-router.put("/:id", authenticate, (req, res) => {
+router.put('/:id', (req, res) => {
   const existing = store.getTaskById(req.params.id);
+
   if (!existing) {
-    return res.status(404).json({ error: "Task not found" });
+    return res.status(404).json({ error: 'Task not found' });
   }
 
-  const validation = validateTaskUpdate(req.body);
-  if (!validation.valid) {
-    return res.status(400).json({ errors: validation.errors });
+  const merged = { ...existing, ...req.body };
+  const errors = validateTask(merged);
+
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
   }
 
-  const updated = store.updateTask(req.params.id, req.body);
-  res.json({ task: updated });
+  const task = store.updateTask(req.params.id, req.body);
+  res.json(task);
 });
 
-router.patch("/:id/complete", authenticate, (req, res) => {
-  const task = store.getTaskById(req.params.id);
-  if (!task) {
-    return res.status(404).json({ error: "Task not found" });
+router.delete('/:id', (req, res) => {
+  const success = store.deleteTask(req.params.id);
+
+  if (!success) {
+    return res.status(404).json({ error: 'Task not found' });
   }
 
-  if (task.status === "completed") {
-    return res.status(400).json({ error: "Task is already completed" });
-  }
-
-  const updated = store.updateTask(req.params.id, { status: "completed" });
-  res.json({ task: updated });
-});
-
-router.delete("/:id", authenticate, requireAdmin, (req, res) => {
-  const task = store.getTaskById(req.params.id);
-  if (!task) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-
-  store.deleteTask(req.params.id);
   res.status(204).send();
 });
 
-router.post("/bulk", authenticate, requireAdmin, async (req, res) => {
-  const { tasks } = req.body;
+router.get('/stats/summary', (req, res) => {
+  const tasks = store.getAllTasks();
 
-  if (!Array.isArray(tasks) || tasks.length === 0) {
-    return res.status(400).json({ error: "tasks must be a non-empty array" });
+  const stats = {
+    total: tasks.length,
+    byStatus: {},
+    byPriority: {},
+    averagePriority: 0,
+  };
+
+  tasks.forEach(task => {
+    stats.byStatus[task.status] = (stats.byStatus[task.status] || 0) + 1;
+    stats.byPriority[task.priority] = (stats.byPriority[task.priority] || 0) + 1;
+  });
+
+  if (tasks.length > 0) {
+    const totalPriority = tasks.reduce((sum, t) => sum + t.priority, 0);
+    stats.averagePriority = Math.round((totalPriority / tasks.length) * 100) / 100;
   }
 
-  const created = [];
-  const errors = [];
-
-  for (const taskData of tasks) {
-    const validation = validateTask(taskData);
-    if (!validation.valid) {
-      errors.push({ title: taskData.title, errors: validation.errors });
-      continue;
-    }
-
-    taskData.assignee = taskData.assignee || req.user.name;
-
-    const task = store.createTask(taskData);
-    created.push(task);
-  }
-
-  res.status(201).json({ created, errors });
+  res.json(stats);
 });
 
 module.exports = router;

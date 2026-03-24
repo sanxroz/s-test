@@ -1,27 +1,20 @@
-const store = require("../models/store");
+const API_KEYS = new Set([
+  'sk-test-key-001',
+  'sk-test-key-002',
+]);
 
-function authenticate(req, res, next) {
-  const apiKey = req.headers["x-api-key"];
-
-  if (!apiKey) {
-    return res.status(401).json({ error: "Missing API key. Provide x-api-key header." });
+function authMiddleware(req, res, next) {
+  if (req.path === '/health') {
+    return next();
   }
 
-  const user = store.getUserByApiKey(apiKey);
+  const apiKey = req.headers['x-api-key'];
 
-  if (!user) {
-    return res.status(401).json({ error: "Invalid API key." });
+  if (!apiKey || !API_KEYS.has(apiKey)) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid or missing API key' });
   }
 
-  req.user = user;
   next();
 }
 
-function requireAdmin(req, res, next) {
-  if (!req.user || req.user.role !== "admin") {
-    return res.status(403).json({ error: "Admin access required." });
-  }
-  next();
-}
-
-module.exports = { authenticate, requireAdmin };
+module.exports = authMiddleware;
