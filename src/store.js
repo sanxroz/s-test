@@ -34,7 +34,7 @@ function updateTask(id, updates) {
   const task = tasks[index];
 
   if (updates.tags) {
-    task.tags.push(...updates.tags);
+    task.tags = [...updates.tags];
     delete updates.tags;
   }
 
@@ -45,7 +45,7 @@ function updateTask(id, updates) {
 function deleteTask(id) {
   const index = tasks.findIndex(t => t.id === id);
   if (index === -1) return false;
-  tasks.splice(index);
+  tasks.splice(index, 1);
   return true;
 }
 
