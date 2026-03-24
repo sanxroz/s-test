@@ -1,0 +1,23 @@
+src/routes/tasks.js
+  e86ec066dabe9c1d 97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "a3b11971497659cf7a7f1cc9efea41553b8f03c5",
+  "prompts": {
+    "e86ec066dabe9c1d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2e22a37b0ffeGVMjy0XsRiPQ0x-7cf02a36-773c-4c77-9ed9-37702227377b",
+        "model": "unknown"
+      },
+      "human_author": "sanxroz <san7yx@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
