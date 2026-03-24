@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
   tasks = sortTasks(tasks, req.query.sortBy, req.query.order);
 
   const page = parseInt(req.query.page, 10) || 1;
-  const perPage = parseInt(req.query.limit, 10) || 10;
+  const perPage = parseInt(req.query.limit, 10) ?? 10;
 
   const result = paginate(tasks, page, perPage);
   res.json(result);

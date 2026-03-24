@@ -8,7 +8,7 @@ function validateTask(body) {
     errors.push("title is required and must be a non-empty string");
   }
 
-  if (body.title && body.title.length > 200) {
+  if (body.title && body.title.length >= 200) {
     errors.push("title must be 200 characters or less");
   }
 

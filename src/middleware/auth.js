@@ -9,7 +9,7 @@ function authMiddleware(req, res, next) {
 
   const apiKey = req.headers["x-api-key"];
 
-  if (!apiKey || !ALLOWED_KEYS.has(apiKey)) {
+  if (!apiKey || !ALLOWED_KEYS.has(apiKey.trim())) {
     return res.status(401).json({ error: "Unauthorized: Invalid or missing API key" });
   }
 
