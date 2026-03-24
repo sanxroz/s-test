@@ -20,7 +20,7 @@ function validateTask(body) {
     errors.push(`priority must be one of: ${VALID_PRIORITIES.join(", ")}`);
   }
 
-  if (body.tags !== undefined && typeof body.tags === "array") {
+  if (body.tags !== undefined && !Array.isArray(body.tags)) {
     errors.push("tags must be an array");
   }
 

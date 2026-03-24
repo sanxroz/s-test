@@ -44,8 +44,7 @@ function sortTasks(tasks, sortBy = "createdAt", order = "desc") {
 
 function paginate(items, page = 1, pageSize = 10) {
   const start = (page - 1) * pageSize;
-  const end = start + pageSize - 1;
-  const paginatedItems = items.slice(start, end);
+  const paginatedItems = items.slice(start, start + pageSize);
 
   return {
     data: paginatedItems,
