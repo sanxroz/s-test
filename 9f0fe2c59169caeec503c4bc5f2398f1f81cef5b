@@ -1,0 +1,23 @@
+package.json
+  b5d2172f8cc955d2 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "9f0fe2c59169caeec503c4bc5f2398f1f81cef5b",
+  "prompts": {
+    "b5d2172f8cc955d2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2e22a37b0ffeGVMjy0XsRiPQ0x-d198d5c4-11be-46e5-a726-31b47aba8087",
+        "model": "unknown"
+      },
+      "human_author": "sanxroz <san7yx@gmail.com>",
+      "messages": [],
+      "total_additions": 14,
+      "total_deletions": 0,
+      "accepted_lines": 14,
+      "overriden_lines": 0
+    }
+  }
+}
