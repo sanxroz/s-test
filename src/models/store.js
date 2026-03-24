@@ -27,8 +27,9 @@ const store = {
       description: task.description || "",
       status: "pending",
       priority: task.priority || "medium",
-      tags: task.tags || [],
+      tags: Array.isArray(task.tags) ? task.tags : [],
       assignee: task.assignee || null,
+      dueDate: task.dueDate || null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -54,6 +55,33 @@ const store = {
 
     data.tasks.splice(index, 1);
     return true;
+  },
+
+  completeTask(id) {
+    const task = this.getTaskById(id);
+    if (!task) return null;
+    task.status = "completed";
+    task.updatedAt = new Date().toISOString();
+    return task;
+  },
+
+  bulkCreate(tasksInput) {
+    return tasksInput.map((t) => this.createTask(t));
+  },
+
+  getSummaryByStatus() {
+    const summary = {};
+    for (const t of data.tasks) {
+      summary[t.status] = (summary[t.status] || 0) + 1;
+    }
+    return summary;
+  },
+
+  getOverdueTasks() {
+    const now = new Date();
+    return data.tasks.filter(
+      (t) => t.status !== "completed" && t.dueDate && new Date(t.dueDate) < now
+    );
   },
 
   getAllUsers() {
