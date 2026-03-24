@@ -1,0 +1,25 @@
+src/utils/validators.js
+  0ab9431dfd126d61 23
+src/utils/helpers.js
+  0ab9431dfd126d61 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "fafc31b2e7d3d12d71e42d915e3600d9cf5bf73b",
+  "prompts": {
+    "0ab9431dfd126d61": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4a6fbd78-4138-4f02-bfcc-b06fb578590c",
+        "model": "claude-4.6-opus-max-thinking"
+      },
+      "human_author": "sanxroz <san7yx@gmail.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 3,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
