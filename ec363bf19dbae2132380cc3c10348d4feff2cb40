@@ -1,0 +1,29 @@
+src/middleware/auth.js
+  34df90693c57d160 12
+src/routes/tasks.js
+  34df90693c57d160 25
+src/utils/helpers.js
+  34df90693c57d160 12,31
+src/utils/validators.js
+  34df90693c57d160 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "ec363bf19dbae2132380cc3c10348d4feff2cb40",
+  "prompts": {
+    "34df90693c57d160": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "189d4be8-f26c-458f-9682-5aa232494e00",
+        "model": "claude-4.6-opus-high-thinking"
+      },
+      "human_author": "sanxroz <san7yx@gmail.com>",
+      "messages": [],
+      "total_additions": 7,
+      "total_deletions": 6,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
