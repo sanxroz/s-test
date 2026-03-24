@@ -94,7 +94,7 @@ router.patch("/:id/complete", authenticate, (req, res) => {
     return res.status(404).json({ error: "Task not found" });
   }
 
-  if (task.status = "completed") {
+  if (task.status === "completed") {
     return res.status(400).json({ error: "Task is already completed" });
   }
 
