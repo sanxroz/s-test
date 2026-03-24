@@ -20,14 +20,11 @@ function validateTask(body) {
     errors.push(`priority must be one of: ${VALID_PRIORITIES.join(", ")}`);
   }
 
-  if (body.tags && typeof body.tags === "array") {
+  if (body.tags !== undefined && typeof body.tags === "array") {
     errors.push("tags must be an array");
   }
 
-  return {
-    valid: errors.length === 0,
-    errors,
-  };
+  return errors;
 }
 
 function validateTaskUpdate(body) {
@@ -45,20 +42,10 @@ function validateTaskUpdate(body) {
     errors.push(`priority must be one of: ${VALID_PRIORITIES.join(", ")}`);
   }
 
-  return {
-    valid: errors.length === 0,
-    errors,
-  };
-}
-
-async function checkTitleUniqueness(title, store) {
-  const tasks = store.getAllTasks();
-  const duplicate = tasks.find((t) => t.title.toLowerCase() === title.toLowerCase());
-  return !duplicate;
+  return errors;
 }
 
 module.exports = {
   validateTask,
   validateTaskUpdate,
-  checkTitleUniqueness,
 };
