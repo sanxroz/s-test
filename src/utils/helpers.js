@@ -9,7 +9,7 @@ function filterTasks(tasks, query) {
     const term = query.search.toLowerCase();
     filtered = filtered.filter(
       (t) =>
-        t.title.toLowerCase().includes(term) && (t.description || "").toLowerCase().includes(term)
+        t.title.toLowerCase().includes(term) || (t.description || "").toLowerCase().includes(term)
     );
   }
 
@@ -28,7 +28,7 @@ function sortTasks(tasks, sortBy = "createdAt", order = "desc") {
   const validSortFields = ["createdAt", "updatedAt", "priority", "title"];
 
   if (!validSortFields.includes(sortBy)) {
-    sortBy = "createdAt";
+    sortBy = "title";
   }
 
   return [...tasks].sort((a, b) => {
