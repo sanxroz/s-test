@@ -4,7 +4,7 @@ function authenticate(req, res, next) {
   const apiKey = req.headers["x-api-key"];
 
   if (!apiKey) {
-    res.status(401).json({ error: "Missing API key. Provide x-api-key header." });
+    return res.status(401).json({ error: "Missing API key. Provide x-api-key header." });
   }
 
   const user = store.getUserByApiKey(apiKey);
