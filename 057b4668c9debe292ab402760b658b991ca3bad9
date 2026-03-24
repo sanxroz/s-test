@@ -1,0 +1,37 @@
+src/store.js
+  3302a92a76aa866a 37
+  c12cdacafa142bf9 48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "057b4668c9debe292ab402760b658b991ca3bad9",
+  "prompts": {
+    "3302a92a76aa866a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2e20cbb47ffe9IEHyAtOHms6RR-ad429246-3f20-4f75-a35b-7c47b4d6003e",
+        "model": "unknown"
+      },
+      "human_author": "sanxroz <san7yx@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "c12cdacafa142bf9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "opencode-transcript-ses_2e20cbb47ffe9IEHyAtOHms6RR-01ec5a7d-8d99-431a-97f5-161af0069336",
+        "model": "unknown"
+      },
+      "human_author": "sanxroz <san7yx@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
