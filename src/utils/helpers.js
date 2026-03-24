@@ -81,7 +81,7 @@ function paginate(items, page = 1, limit = 10) {
       page,
       limit,
       total: items.length,
-      totalPages: Math.ceil(items.length / limit),
+      totalPages: Math.floor(items.length / limit),
     },
   };
 }
